@@ -1,0 +1,382 @@
+#include <llama.h>
+#include "stator_timing.h"
+
+#include <algorithm>
+#include <chrono>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <fstream>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+#include <thread>
+#include <vector>
+
+#include <fcntl.h>
+#include <spawn.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+extern char** environ;
+
+namespace {
+
+using Clock = std::chrono::steady_clock;
+
+double ms_since(Clock::time_point start) {
+  return std::chrono::duration<double, std::milli>(Clock::now() - start)
+      .count();
+}
+
+std::string read_file(const std::string& path) {
+  std::ifstream input(path, std::ios::binary);
+  if (!input) {
+    throw std::runtime_error("cannot read " + path);
+  }
+  std::ostringstream text;
+  text << input.rdbuf();
+  return text.str();
+}
+
+std::vector<llama_token> tokenize(const llama_vocab* vocab,
+                                  const std::string& text, bool special) {
+  const int needed = -llama_tokenize(vocab, text.data(),
+                                     static_cast<int32_t>(text.size()),
+                                     nullptr, 0, special, false);
+  std::vector<llama_token> tokens(static_cast<size_t>(std::max(needed, 0)));
+  const int written =
+      llama_tokenize(vocab, text.data(), static_cast<int32_t>(text.size()),
+                     tokens.data(), static_cast<int32_t>(tokens.size()),
+                     special, false);
+  if (written != needed) {
+    throw std::runtime_error("tokenization failed");
+  }
+  return tokens;
+}
+
+void decode(llama_context* context, std::vector<llama_token>& tokens,
+            size_t first, size_t count, size_t batch) {
+  for (size_t done = 0; done < count; done += batch) {
+    const size_t piece = std::min(batch, count - done);
+    if (llama_decode(context,
+                     llama_batch_get_one(tokens.data() + first + done,
+                                         static_cast<int32_t>(piece))) != 0) {
+      throw std::runtime_error("decode failed");
+    }
+  }
+  llama_synchronize(context);
+}
+
+std::string one_line(const std::string& text) {
+  std::string line;
+  for (const char c : text) {
+    if (c == '\\') {
+      line += "\\\\";
+    } else if (c == '\n') {
+      line += "\\n";
+    } else if (c == '\r') {
+      line += "\\r";
+    } else {
+      line += c;
+    }
+  }
+  return line;
+}
+
+std::vector<std::string> task_lines() {
+  std::vector<std::string> lines;
+  const char* path = std::getenv("STATOR_TASKS_FILE");
+  if (path == nullptr) {
+    return lines;
+  }
+  std::ifstream in(path);
+  for (std::string line; std::getline(in, line);) {
+    if (!line.empty()) {
+      lines.push_back(line);
+    }
+  }
+  if (lines.empty()) {
+    throw std::runtime_error(std::string("no task in ") + path);
+  }
+  return lines;
+}
+
+std::string task_of(int agent) {
+  const char* directory = std::getenv("STATOR_TASK_DIR");
+  if (directory != nullptr) {
+    const std::string path =
+        std::string(directory) + "/task." + std::to_string(agent) + ".txt";
+    std::ifstream in(path, std::ios::binary);
+    if (!in) {
+      throw std::runtime_error("no task file " + path);
+    }
+    std::ostringstream text;
+    text << in.rdbuf();
+    return text.str();
+  }
+  static const std::vector<std::string> lines = task_lines();
+  if (!lines.empty()) {
+    return "\n\nUser request for agent " + std::to_string(agent) + ": " +
+           lines[static_cast<size_t>(agent) % lines.size()] + "\nCall:\n";
+  }
+  return "\n\nTask for agent " + std::to_string(agent) +
+         ": summarize the text above in " + std::to_string(agent + 2) +
+         " sentences.";
+}
+
+std::string parent_task() {
+  const char* path = std::getenv("STATOR_TASKS_FILE");
+  if (path == nullptr) {
+    return "\n\nTask for the parent: list the kernel mechanisms named above.";
+  }
+  std::ifstream in(path);
+  std::string last;
+  for (std::string line; std::getline(in, line);) {
+    if (!line.empty()) {
+      last = line;
+    }
+  }
+  return "\n\nUser request for the parent: " + last + "\nCall:\n";
+}
+
+std::vector<std::string> child_environment(
+    const std::vector<std::pair<std::string, std::string>>& changes) {
+  std::vector<std::string> result;
+  for (char** entry = environ; *entry != nullptr; ++entry) {
+    const std::string line = *entry;
+    const std::string name = line.substr(0, line.find('='));
+    const bool replaced =
+        std::any_of(changes.begin(), changes.end(),
+                    [&name](const auto& change) { return change.first == name; });
+    if (!replaced && name != "STATOR_KV_VMM_EXPORT") {
+      result.push_back(line);
+    }
+  }
+  for (const auto& [name, value] : changes) {
+    result.push_back(name + "=" + value);
+  }
+  return result;
+}
+
+pid_t start_child(const std::string& binary,
+                  const std::vector<std::string>& arguments,
+                  const std::vector<std::string>& environment,
+                  const std::string& output) {
+  std::vector<char*> argv;
+  for (const auto& argument : arguments) {
+    argv.push_back(const_cast<char*>(argument.c_str()));
+  }
+  argv.push_back(nullptr);
+  std::vector<char*> envp;
+  for (const auto& entry : environment) {
+    envp.push_back(const_cast<char*>(entry.c_str()));
+  }
+  envp.push_back(nullptr);
+  posix_spawn_file_actions_t actions;
+  posix_spawn_file_actions_init(&actions);
+  posix_spawn_file_actions_addopen(&actions, STDOUT_FILENO, output.c_str(),
+                                   O_WRONLY | O_CREAT | O_TRUNC, 0644);
+  const std::string errors = output + ".err";
+  posix_spawn_file_actions_addopen(&actions, STDERR_FILENO, errors.c_str(),
+                                   O_WRONLY | O_CREAT | O_TRUNC, 0644);
+  pid_t pid = -1;
+  const int status = posix_spawn(&pid, binary.c_str(), &actions, nullptr,
+                                 argv.data(), envp.data());
+  posix_spawn_file_actions_destroy(&actions);
+  if (status != 0) {
+    throw std::runtime_error("cannot start " + binary);
+  }
+  return pid;
+}
+
+int run(int argc, char** argv) {
+  const auto process_start = Clock::now();
+  stator_measure::Recorder trace;
+  if (argc < 10) {
+    std::fprintf(stderr,
+                 "usage: publisher MODEL CTX PREFIX_FILE STATE N_GEN GO_FILE "
+                 "OUT_DIR CHILD_BINARY CHILD_GPU...\n");
+    return 2;
+  }
+  const std::string model_path = argv[1];
+  const std::string context_text = argv[2];
+  const uint32_t context_size =
+      static_cast<uint32_t>(std::strtoul(argv[2], nullptr, 10));
+  const std::string prefix_path = argv[3];
+  const std::string state_path = argv[4];
+  const std::string generate_text = argv[5];
+  const int n_gen = std::atoi(argv[5]);
+  const std::string go_path = argv[6];
+  const std::string out_dir = argv[7];
+  const std::string child_binary = argv[8];
+  const std::vector<std::string> child_gpus(argv + 9, argv + argc);
+  const size_t batch = 2048;
+
+  trace.reserve(256 + static_cast<size_t>(std::max(n_gen, 0)) * static_cast<size_t>(argc));
+  trace.event("backend_start");
+  llama_backend_init();
+  trace.event("backend_end");
+  auto mark = Clock::now();
+  llama_model_params model_params = llama_model_default_params();
+  model_params.n_gpu_layers = 99;
+  trace.event("model_start");
+  llama_model* model =
+      llama_model_load_from_file(model_path.c_str(), model_params);
+  if (model == nullptr) {
+    throw std::runtime_error("cannot load " + model_path);
+  }
+  const double model_ms = ms_since(mark);
+  trace.event("model_end");
+  const llama_vocab* vocab = llama_model_get_vocab(model);
+  const int vocabulary = llama_vocab_n_tokens(vocab);
+
+  mark = Clock::now();
+  llama_context_params context_params = llama_context_default_params();
+  context_params.n_ctx = context_size;
+  context_params.n_batch = static_cast<uint32_t>(batch);
+  context_params.no_perf = true;
+  trace.event("context_start");
+  llama_context* context = llama_init_from_model(model, context_params);
+  if (context == nullptr) {
+    throw std::runtime_error("cannot create the context");
+  }
+  const double context_ms = ms_since(mark);
+  trace.event("context_end");
+  trace.checkpoint();
+
+  std::vector<llama_token> tokens = tokenize(vocab, read_file(prefix_path), true);
+  mark = Clock::now();
+  trace.event("prefix_start");
+  decode(context, tokens, 0, tokens.size(), batch);
+  trace.event("prefix_end", static_cast<int64_t>(tokens.size()));
+  const double prefix_ms = ms_since(mark);
+  const size_t prefix_tokens = tokens.size();
+
+  mark = Clock::now();
+  trace.event("publish_start");
+  if (!llama_state_save_file(context, state_path.c_str(), tokens.data(),
+                             tokens.size())) {
+    throw std::runtime_error("cannot save the state " + state_path);
+  }
+  const double publish_ms = ms_since(mark);
+  trace.event("publish_end");
+  trace.checkpoint();
+  struct stat status {};
+  const long long state_bytes = stat(state_path.c_str(), &status) == 0
+                                    ? static_cast<long long>(status.st_size)
+                                    : -1;
+  std::printf("PUBLISHED prefix_tokens=%zu prefix_ms=%.1f publish_ms=%.2f "
+              "state_bytes=%lld\n",
+              prefix_tokens, prefix_ms, publish_ms, state_bytes);
+  std::fflush(stdout);
+  trace.event("wait_start");
+  for (;;) {
+    struct stat go {};
+    if (stat(go_path.c_str(), &go) == 0) {
+      break;
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+  }
+
+  trace.event("released");
+
+  std::vector<std::pair<std::string, std::string>> changes;
+  const char* exported = std::getenv("STATOR_KV_VMM_EXPORT");
+  const char* host = std::getenv("STATOR_KV_HOST");
+  if (exported != nullptr) {
+    changes.emplace_back("STATOR_KV_VMM_IMPORT", exported);
+  } else if (host != nullptr) {
+    changes.emplace_back("STATOR_KV_PREFIX", std::to_string(prefix_tokens));
+  }
+
+  const char* alone_text = std::getenv("STATOR_CHILD_ALONE");
+  const bool alone = alone_text != nullptr && std::string(alone_text) == "1";
+  std::vector<pid_t> children;
+  trace.event("spawn_start");
+  for (size_t index = 0; index < child_gpus.size(); ++index) {
+    auto environment = changes;
+    environment.emplace_back("CUDA_VISIBLE_DEVICES", child_gpus[index]);
+    children.push_back(start_child(
+        child_binary,
+        alone ? std::vector<std::string>{child_binary, "alone", model_path,
+                                          context_text, prefix_path,
+                                          task_of(static_cast<int>(index)),
+                                          generate_text}
+              : std::vector<std::string>{child_binary, "child", model_path,
+                                          context_text, state_path,
+                                          task_of(static_cast<int>(index)),
+                                          generate_text},
+        child_environment(environment),
+        out_dir + "/child." + std::to_string(index)));
+    trace.event("child_spawn", children.back(), static_cast<int>(index));
+  }
+
+  trace.event("spawn_end");
+  mark = Clock::now();
+  trace.event("input_decode_start");
+  const std::vector<llama_token> task = tokenize(
+      vocab, parent_task(),
+      false);
+  tokens.insert(tokens.end(), task.begin(), task.end());
+  decode(context, tokens, prefix_tokens, task.size(), batch);
+  const double suffix_ms = ms_since(mark);
+  trace.event("input_decode_end");
+
+  mark = Clock::now();
+  trace.begin_generation();
+  std::string text;
+  for (int step = 0; step < n_gen; ++step) {
+    const float* logits = llama_get_logits_ith(context, -1);
+    llama_token token = static_cast<llama_token>(
+        std::max_element(logits, logits + vocabulary) - logits);
+    trace.token(token);
+    char piece[256];
+    const int length =
+        llama_token_to_piece(vocab, token, piece, sizeof(piece), 0, true);
+    if (length > 0) {
+      text.append(piece, static_cast<size_t>(length));
+    }
+    if (llama_decode(context, llama_batch_get_one(&token, 1)) != 0) {
+      throw std::runtime_error("decode failed");
+    }
+  }
+  llama_synchronize(context);
+  const double generation_ms = ms_since(mark);
+  trace.end_generation(n_gen);
+  trace.checkpoint();
+
+  for (size_t index = 0; index < children.size(); ++index) {
+    int child_status = 0;
+    waitpid(children[index], &child_status, 0);
+    std::printf("CHILD index=%zu exit=%d\n", index,
+                WIFEXITED(child_status) ? WEXITSTATUS(child_status) : 128);
+  }
+  std::printf(
+      "RESULT role=parent prefix_tokens=%zu model_ms=%.1f context_ms=%.1f "
+      "suffix_ms=%.1f generation_ms=%.1f generated=%d generation_tps=%.3f "
+      "total_ms=%.1f\n",
+      prefix_tokens, model_ms, context_ms, suffix_ms, generation_ms, n_gen,
+      generation_ms > 0.0 ? n_gen * 1000.0 / generation_ms : 0.0,
+      ms_since(process_start));
+  std::printf("TEXT %s\n", one_line(text).c_str());
+  std::fflush(stdout);
+
+  llama_free(context);
+  llama_model_free(model);
+  llama_backend_free();
+  trace.finish();
+  return 0;
+}
+
+}
+
+int main(int argc, char** argv) {
+  try {
+    return run(argc, argv);
+  } catch (const std::exception& error) {
+    std::fprintf(stderr, "publisher: %s\n", error.what());
+    return 1;
+  }
+}

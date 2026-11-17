@@ -1,0 +1,113 @@
+{
+  "rate": 0.14,
+  "window_s": 480,
+  "budget_gib": 96,
+  "reserve_gib": 16,
+  "floor_gib": 12,
+  "trace_controls": [
+    {
+      "seed": 1,
+      "configured_tool_mean_s": 60,
+      "observed_tool_mean_s": 62.3504008757808,
+      "sessions": 54,
+      "requested_tokens": 5952,
+      "limit_s": 1811,
+      "arrivals_identical_across_wait_conditions": true
+    },
+    {
+      "seed": 1,
+      "configured_tool_mean_s": 120,
+      "observed_tool_mean_s": 122.92073969000668,
+      "sessions": 54,
+      "requested_tokens": 5952,
+      "limit_s": 2245,
+      "arrivals_identical_across_wait_conditions": true
+    },
+    {
+      "seed": 1,
+      "configured_tool_mean_s": 240,
+      "observed_tool_mean_s": 226.48758273765216,
+      "sessions": 54,
+      "requested_tokens": 5952,
+      "limit_s": 2533,
+      "arrivals_identical_across_wait_conditions": true
+    },
+    {
+      "seed": 2,
+      "configured_tool_mean_s": 60,
+      "observed_tool_mean_s": 62.59727388371471,
+      "sessions": 68,
+      "requested_tokens": 7424,
+      "limit_s": 1807,
+      "arrivals_identical_across_wait_conditions": true
+    },
+    {
+      "seed": 2,
+      "configured_tool_mean_s": 120,
+      "observed_tool_mean_s": 123.5464130178594,
+      "sessions": 68,
+      "requested_tokens": 7424,
+      "limit_s": 2329,
+      "arrivals_identical_across_wait_conditions": true
+    },
+    {
+      "seed": 2,
+      "configured_tool_mean_s": 240,
+      "observed_tool_mean_s": 219.70920446956885,
+      "sessions": 68,
+      "requested_tokens": 7424,
+      "limit_s": 2532,
+      "arrivals_identical_across_wait_conditions": true
+    },
+    {
+      "seed": 3,
+      "configured_tool_mean_s": 60,
+      "observed_tool_mean_s": 46.99490296535487,
+      "sessions": 59,
+      "requested_tokens": 6400,
+      "limit_s": 1552,
+      "arrivals_identical_across_wait_conditions": true
+    },
+    {
+      "seed": 3,
+      "configured_tool_mean_s": 120,
+      "observed_tool_mean_s": 92.45062893766207,
+      "sessions": 59,
+      "requested_tokens": 6400,
+      "limit_s": 1848,
+      "arrivals_identical_across_wait_conditions": true
+    },
+    {
+      "seed": 3,
+      "configured_tool_mean_s": 240,
+      "observed_tool_mean_s": 179.73795932646,
+      "sessions": 59,
+      "requested_tokens": 6400,
+      "limit_s": 2297,
+      "arrivals_identical_across_wait_conditions": true
+    }
+  ],
+  "jobs": [
+    {
+      "trace": "traces/tool_wait-seed1-rate0.14-mean120.json",
+      "sha256": "eb643b791f6a8c8f68b6afa56585cfbd8c3d9a36800500f950e07971d3c770ea",
+      "system": "none",
+      "tag": "trace-seed1-mean120-none",
+      "limit_s": 2245
+    },
+    {
+      "trace": "traces/tool_wait-seed2-rate0.14-mean120.json",
+      "sha256": "10a62e891da125ce3e0d1f1215ef6d17bcf8e37af420398f0d29b11eadda4f79",
+      "system": "none",
+      "tag": "trace-seed2-mean120-none",
+      "limit_s": 2329
+    },
+    {
+      "trace": "traces/tool_wait-seed3-rate0.14-mean120.json",
+      "sha256": "8f8609d1960e0c6411727f2a09a201612cd399586ef6dc0a3caa5a8f5a46122e",
+      "system": "none",
+      "tag": "trace-seed3-mean120-none",
+      "limit_s": 1848
+    }
+  ]
+}

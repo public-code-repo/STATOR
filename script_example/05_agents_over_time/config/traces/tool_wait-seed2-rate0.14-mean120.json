@@ -1,0 +1,1040 @@
+{
+  "suite": "tool_wait",
+  "seed": 2,
+  "rate": 0.14,
+  "trace_top_rate": 0.21,
+  "window_s": 480,
+  "tool_mean_s": 120,
+  "tool_min_s": 10,
+  "tool_max_s": 600,
+  "fork_k": 3,
+  "n_gen": 32,
+  "memory_budget_gib": 96,
+  "reserve_gib": 16,
+  "guard_gib": 12,
+  "trace_derived_limit_s": 2329,
+  "limit_definition": "max(window, latest arrival + session critical-path tool delay) + 600 s + total generated tokens / 20 tok/s; unfinished is still reported",
+  "total_requested_tokens": 7424,
+  "sessions": [
+    {
+      "sid": 0,
+      "arrival": 14.877832643538396,
+      "kind": "fork",
+      "task": "List the command line options of the server that control the context size and the number of parallel slots.",
+      "tools": [
+        10.642959298796429,
+        216.58054667018402
+      ],
+      "child_tools": [
+        159.80310054310846,
+        132.94151912681752,
+        44.203984302896295
+      ]
+    },
+    {
+      "sid": 1,
+      "arrival": 19.312416778054313,
+      "kind": "tool",
+      "task": "Which tool reports the remaining battery time, and which arguments does it take?",
+      "tools": [
+        20.69161001053655,
+        67.59532995712837
+      ],
+      "child_tools": [
+        60.01236207310841,
+        154.0537665985957,
+        600
+      ]
+    },
+    {
+      "sid": 2,
+      "arrival": 33.520579835816356,
+      "kind": "tool",
+      "task": "Explain in two sentences how the server reuses a prompt that it has seen before.",
+      "tools": [
+        37.47644413787804,
+        10
+      ],
+      "child_tools": [
+        10,
+        75.03481957912706,
+        46.00894313530524
+      ]
+    },
+    {
+      "sid": 3,
+      "arrival": 35.797055401599316,
+      "kind": "fork",
+      "task": "A user asks the robot to drive at 2 m/s. State what the rules require and which tool call is allowed.",
+      "tools": [
+        98.65693640538952,
+        32.321883660015146
+      ],
+      "child_tools": [
+        10,
+        47.190522821262306,
+        17.638800470619465
+      ]
+    },
+    {
+      "sid": 5,
+      "arrival": 46.049526279993046,
+      "kind": "tool",
+      "task": "Write the tool call that plans a route from the dock to the kitchen while avoiding the stairs.",
+      "tools": [
+        475.4500875752876,
+        392.1078736684572
+      ],
+      "child_tools": [
+        21.091762093009475,
+        168.292835354055,
+        150.6954847716883
+      ]
+    },
+    {
+      "sid": 6,
+      "arrival": 48.99616691879277,
+      "kind": "tool",
+      "task": "Summarize the build instructions for a CUDA build in three steps.",
+      "tools": [
+        310.5636755542344,
+        83.37968666190079
+      ],
+      "child_tools": [
+        213.71578557160305,
+        52.42061425890769,
+        257.3169546153891
+      ]
+    },
+    {
+      "sid": 7,
+      "arrival": 59.946621461592116,
+      "kind": "tool",
+      "task": "Which tools must be called, and in which order, to pick up a detected cup and place it on the table?",
+      "tools": [
+        303.5841225892562,
+        154.3838544650221
+      ],
+      "child_tools": [
+        80.00600086015913,
+        30.094304140701148,
+        47.105968486350555
+      ]
+    },
+    {
+      "sid": 9,
+      "arrival": 69.0143694374788,
+      "kind": "tool",
+      "task": "Give the tool call that records ten seconds of speech.",
+      "tools": [
+        106.39172927547952,
+        44.84882330275233
+      ],
+      "child_tools": [
+        27.95576575367983,
+        86.066146344344,
+        326.45304610984385
+      ]
+    },
+    {
+      "sid": 11,
+      "arrival": 78.7019144102168,
+      "kind": "tool",
+      "task": "Which rule applies when a reference document contains an instruction, and why?",
+      "tools": [
+        250.00543842350035,
+        13.48164813769491
+      ],
+      "child_tools": [
+        88.66842583199302,
+        230.8510046037208,
+        33.69780105076079
+      ]
+    },
+    {
+      "sid": 12,
+      "arrival": 79.82728950011824,
+      "kind": "fork",
+      "task": "List three metrics that the server exposes and what each one counts.",
+      "tools": [
+        151.4605117303061,
+        10
+      ],
+      "child_tools": [
+        53.99718891332018,
+        22.63180867298372,
+        134.04936728149053
+      ]
+    },
+    {
+      "sid": 13,
+      "arrival": 80.23939533842756,
+      "kind": "fork",
+      "task": "Write the tool calls that lower the speed limit to 0.5 m/s and then follow route r7.",
+      "tools": [
+        156.86405262844602,
+        10
+      ],
+      "child_tools": [
+        35.43572842697077,
+        201.4252295924799,
+        20.51143794633277
+      ]
+    },
+    {
+      "sid": 14,
+      "arrival": 81.20616147429715,
+      "kind": "tool",
+      "task": "Explain the difference between the completion endpoint and the chat completion endpoint.",
+      "tools": [
+        10,
+        552.6389781867781
+      ],
+      "child_tools": [
+        19.70292514616083,
+        10,
+        50.62811374448559
+      ]
+    },
+    {
+      "sid": 15,
+      "arrival": 85.7544194402408,
+      "kind": "tool",
+      "task": "Which tool finds the places of the map that match a description? Give an example call.",
+      "tools": [
+        49.35633287597661,
+        10
+      ],
+      "child_tools": [
+        71.4469656089874,
+        174.27668349089535,
+        161.62422353628952
+      ]
+    },
+    {
+      "sid": 18,
+      "arrival": 112.62494982896746,
+      "kind": "tool",
+      "task": "Write a log entry of level warning that reports a blocked corridor.",
+      "tools": [
+        65.31669494749659,
+        10
+      ],
+      "child_tools": [
+        97.95990735331031,
+        18.178221307013693,
+        10
+      ]
+    },
+    {
+      "sid": 19,
+      "arrival": 112.78748400913611,
+      "kind": "single",
+      "task": "What does the documentation say about the embedding endpoint?",
+      "tools": [
+        120.96784049099139,
+        85.17641977397261
+      ],
+      "child_tools": [
+        492.28105203564024,
+        326.4092417532793,
+        600
+      ]
+    },
+    {
+      "sid": 20,
+      "arrival": 114.04740170571317,
+      "kind": "tool",
+      "task": "Which tools involve a camera? List them with their required arguments.",
+      "tools": [
+        107.35447180150926,
+        117.43230431999272
+      ],
+      "child_tools": [
+        193.25708747416718,
+        148.33750366917567,
+        35.58402189603182
+      ]
+    },
+    {
+      "sid": 21,
+      "arrival": 116.66617476181789,
+      "kind": "tool",
+      "task": "Describe the purpose of the system prompt in the chat format, as the documentation presents it.",
+      "tools": [
+        10,
+        63.057174541428516
+      ],
+      "child_tools": [
+        14.142585164470653,
+        154.3824291231055,
+        33.06915953502239
+      ]
+    },
+    {
+      "sid": 22,
+      "arrival": 117.16669105519128,
+      "kind": "single",
+      "task": "Give the tool call that adds a task of priority 2 that is due tomorrow at noon.",
+      "tools": [
+        29.40891909311169,
+        88.26053337243323
+      ],
+      "child_tools": [
+        74.92481686676196,
+        44.48001137347077,
+        123.18583899561621
+      ]
+    },
+    {
+      "sid": 24,
+      "arrival": 120.8816485846243,
+      "kind": "tool",
+      "task": "Which tool sends text to another agent, and what are its arguments?",
+      "tools": [
+        11.817680135774491,
+        194.73634445506963
+      ],
+      "child_tools": [
+        54.71958416415945,
+        87.87888600963153,
+        305.2829207272395
+      ]
+    },
+    {
+      "sid": 26,
+      "arrival": 134.11655233793607,
+      "kind": "tool",
+      "task": "State the three kinds of material that this briefing contains.",
+      "tools": [
+        72.05141560032575,
+        63.45316863149855
+      ],
+      "child_tools": [
+        79.83184837922052,
+        28.020680376538788,
+        106.62503640657356
+      ]
+    },
+    {
+      "sid": 27,
+      "arrival": 134.48156922827215,
+      "kind": "tool",
+      "task": "Write the tool call that reads printed text with the front camera.",
+      "tools": [
+        328.50446543643756,
+        10
+      ],
+      "child_tools": [
+        168.7718676881909,
+        25.636534148459802,
+        101.71051585625045
+      ]
+    },
+    {
+      "sid": 31,
+      "arrival": 156.63961595376597,
+      "kind": "fork",
+      "task": "Give a one-sentence description of each of the first five tools.",
+      "tools": [
+        31.617654801041738,
+        80.51685411418761
+      ],
+      "child_tools": [
+        36.03621872838434,
+        66.96135381204562,
+        136.41012711110082
+      ]
+    },
+    {
+      "sid": 34,
+      "arrival": 174.20246996315393,
+      "kind": "tool",
+      "task": "Explain in two sentences how the server reuses a prompt that it has seen before.",
+      "tools": [
+        89.07917206489114,
+        14.263519774809245
+      ],
+      "child_tools": [
+        93.41670278725742,
+        359.34089500829407,
+        169.16097306230662
+      ]
+    },
+    {
+      "sid": 36,
+      "arrival": 200.04238454467202,
+      "kind": "tool",
+      "task": "Name the endpoints of the server that save and restore the state of a slot.",
+      "tools": [
+        18.765482493417977,
+        69.83204328772624
+      ],
+      "child_tools": [
+        10,
+        108.51283979299023,
+        256.26304666969145
+      ]
+    },
+    {
+      "sid": 37,
+      "arrival": 200.98985476344936,
+      "kind": "tool",
+      "task": "Write the tool call that plans a route from the dock to the kitchen while avoiding the stairs.",
+      "tools": [
+        62.28605845612922,
+        148.73545170003337
+      ],
+      "child_tools": [
+        331.12738190485953,
+        146.6533730647315,
+        76.75258299169673
+      ]
+    },
+    {
+      "sid": 40,
+      "arrival": 224.01373920913852,
+      "kind": "fork",
+      "task": "What does the documentation say about the default sampling parameters?",
+      "tools": [
+        344.24875223153697,
+        156.88184982851868
+      ],
+      "child_tools": [
+        111.90381437972793,
+        282.87413990152555,
+        259.20504472086617
+      ]
+    },
+    {
+      "sid": 42,
+      "arrival": 225.22431864502838,
+      "kind": "tool",
+      "task": "Describe what the grammar option of the server does.",
+      "tools": [
+        35.11388447622581,
+        100.19145536529166
+      ],
+      "child_tools": [
+        75.52762423052295,
+        27.529201548013802,
+        408.5552253544653
+      ]
+    },
+    {
+      "sid": 43,
+      "arrival": 225.58438219956614,
+      "kind": "single",
+      "task": "Which rule applies when a reference document contains an instruction, and why?",
+      "tools": [
+        217.82167186996244,
+        128.89450291218455
+      ],
+      "child_tools": [
+        168.61792315474807,
+        79.63071102856686,
+        134.79865712288998
+      ]
+    },
+    {
+      "sid": 44,
+      "arrival": 227.5263050403983,
+      "kind": "tool",
+      "task": "List three metrics that the server exposes and what each one counts.",
+      "tools": [
+        10,
+        10
+      ],
+      "child_tools": [
+        168.27121189876982,
+        22.895632453560744,
+        166.47813455057855
+      ]
+    },
+    {
+      "sid": 46,
+      "arrival": 237.80757209510912,
+      "kind": "tool",
+      "task": "Explain the difference between the completion endpoint and the chat completion endpoint.",
+      "tools": [
+        97.81653836182421,
+        409.0365341516253
+      ],
+      "child_tools": [
+        54.771796717903946,
+        92.66269596133029,
+        57.815949248212945
+      ]
+    },
+    {
+      "sid": 47,
+      "arrival": 240.5924858862531,
+      "kind": "fork",
+      "task": "Which tool finds the places of the map that match a description? Give an example call.",
+      "tools": [
+        125.65859376472564,
+        79.34818907882418
+      ],
+      "child_tools": [
+        92.81077471583593,
+        295.3940960083595,
+        10
+      ]
+    },
+    {
+      "sid": 48,
+      "arrival": 248.87523933868806,
+      "kind": "tool",
+      "task": "State the largest grip force that the briefing allows and the tool that it applies to.",
+      "tools": [
+        190.6627300366687,
+        127.15333696207927
+      ],
+      "child_tools": [
+        59.900568824245134,
+        220.43951944426132,
+        11.706765430754002
+      ]
+    },
+    {
+      "sid": 49,
+      "arrival": 253.6526225796307,
+      "kind": "tool",
+      "task": "Summarize how the documentation describes the handling of several simultaneous requests.",
+      "tools": [
+        228.40963817416693,
+        191.85826758305345
+      ],
+      "child_tools": [
+        118.9347005360798,
+        44.194067614068906,
+        31.818735134028792
+      ]
+    },
+    {
+      "sid": 50,
+      "arrival": 256.56518275425384,
+      "kind": "tool",
+      "task": "Write a log entry of level warning that reports a blocked corridor.",
+      "tools": [
+        379.7112978434167,
+        14.249438412346649
+      ],
+      "child_tools": [
+        204.8569210280499,
+        57.21228265778236,
+        54.42070509744903
+      ]
+    },
+    {
+      "sid": 51,
+      "arrival": 258.3904201376033,
+      "kind": "single",
+      "task": "What does the documentation say about the embedding endpoint?",
+      "tools": [
+        21.85418351673335,
+        70.00948729684806
+      ],
+      "child_tools": [
+        41.43516628709652,
+        269.96861462731306,
+        305.72999941106036
+      ]
+    },
+    {
+      "sid": 57,
+      "arrival": 278.12387147895714,
+      "kind": "single",
+      "task": "Summarize the options that select how many layers run on the GPU.",
+      "tools": [
+        53.39982623424979,
+        299.60494357676157
+      ],
+      "child_tools": [
+        257.66915851942196,
+        172.03698010950737,
+        68.81520014276666
+      ]
+    },
+    {
+      "sid": 59,
+      "arrival": 294.25948154019187,
+      "kind": "single",
+      "task": "Write the tool call that reads printed text with the front camera.",
+      "tools": [
+        27.430845433835373,
+        34.678755723803356
+      ],
+      "child_tools": [
+        65.44954150751873,
+        34.55004868697483,
+        50.35192589818225
+      ]
+    },
+    {
+      "sid": 60,
+      "arrival": 295.6071080571254,
+      "kind": "tool",
+      "task": "What does the documentation say about the timeout of a request?",
+      "tools": [
+        49.2195908313529,
+        55.976678385556966
+      ],
+      "child_tools": [
+        175.2273051799926,
+        10,
+        18.6641308609275
+      ]
+    },
+    {
+      "sid": 63,
+      "arrival": 313.4897216692559,
+      "kind": "tool",
+      "task": "Give a one-sentence description of each of the first five tools.",
+      "tools": [
+        503.4346096698534,
+        540.4230863406923
+      ],
+      "child_tools": [
+        220.50476620650255,
+        72.7430612789113,
+        63.68050490166692
+      ]
+    },
+    {
+      "sid": 64,
+      "arrival": 317.03233895335796,
+      "kind": "single",
+      "task": "List the command line options of the server that control the context size and the number of parallel slots.",
+      "tools": [
+        600,
+        16.46487615210813
+      ],
+      "child_tools": [
+        332.488949519408,
+        136.6305863267613,
+        295.9400032720736
+      ]
+    },
+    {
+      "sid": 67,
+      "arrival": 326.5876758980386,
+      "kind": "single",
+      "task": "A user asks the robot to drive at 2 m/s. State what the rules require and which tool call is allowed.",
+      "tools": [
+        10,
+        26.718296791081087
+      ],
+      "child_tools": [
+        300.9665938265688,
+        207.14936800633063,
+        88.79970406463386
+      ]
+    },
+    {
+      "sid": 68,
+      "arrival": 332.0410990408085,
+      "kind": "fork",
+      "task": "Name the endpoints of the server that save and restore the state of a slot.",
+      "tools": [
+        81.29717252329002,
+        16.95493934370239
+      ],
+      "child_tools": [
+        14.866461332247054,
+        13.746376916325412,
+        28.558260201208206
+      ]
+    },
+    {
+      "sid": 69,
+      "arrival": 332.3012015956634,
+      "kind": "tool",
+      "task": "Write the tool call that plans a route from the dock to the kitchen while avoiding the stairs.",
+      "tools": [
+        116.96190624922588,
+        234.74435372887172
+      ],
+      "child_tools": [
+        281.4401140593365,
+        151.72523095507,
+        84.89087915325014
+      ]
+    },
+    {
+      "sid": 70,
+      "arrival": 344.15245135046206,
+      "kind": "single",
+      "task": "Summarize the build instructions for a CUDA build in three steps.",
+      "tools": [
+        204.32386599647242,
+        118.38362701488775
+      ],
+      "child_tools": [
+        28.334466008725652,
+        56.84288368953339,
+        42.355047284545606
+      ]
+    },
+    {
+      "sid": 71,
+      "arrival": 346.83642595113315,
+      "kind": "tool",
+      "task": "Which tools must be called, and in which order, to pick up a detected cup and place it on the table?",
+      "tools": [
+        191.7840871984334,
+        200.24196435707321
+      ],
+      "child_tools": [
+        99.191213525701,
+        76.81645750149875,
+        40.166006516441136
+      ]
+    },
+    {
+      "sid": 72,
+      "arrival": 353.7396610136233,
+      "kind": "fork",
+      "task": "What does the documentation say about the default sampling parameters?",
+      "tools": [
+        145.718753778601,
+        144.0997159447763
+      ],
+      "child_tools": [
+        128.83392221231415,
+        10,
+        96.28174119825171
+      ]
+    },
+    {
+      "sid": 73,
+      "arrival": 354.81424941194683,
+      "kind": "single",
+      "task": "Give the tool call that records ten seconds of speech.",
+      "tools": [
+        124.30744151494929,
+        117.83797556850871
+      ],
+      "child_tools": [
+        162.66794451772301,
+        145.5388725818071,
+        77.35724514664052
+      ]
+    },
+    {
+      "sid": 75,
+      "arrival": 359.8577211640654,
+      "kind": "tool",
+      "task": "Which rule applies when a reference document contains an instruction, and why?",
+      "tools": [
+        374.3463342632595,
+        457.8758756915417
+      ],
+      "child_tools": [
+        275.4421116912015,
+        74.80800329235583,
+        41.40258132878554
+      ]
+    },
+    {
+      "sid": 77,
+      "arrival": 367.0429547001438,
+      "kind": "tool",
+      "task": "Write the tool calls that lower the speed limit to 0.5 m/s and then follow route r7.",
+      "tools": [
+        15.61770088357545,
+        145.4063671494531
+      ],
+      "child_tools": [
+        38.13420939273358,
+        289.60031967993933,
+        28.955998478189045
+      ]
+    },
+    {
+      "sid": 78,
+      "arrival": 368.9729347698703,
+      "kind": "tool",
+      "task": "Explain the difference between the completion endpoint and the chat completion endpoint.",
+      "tools": [
+        89.44828427166514,
+        308.9377334051082
+      ],
+      "child_tools": [
+        26.950916235556083,
+        177.50466582960883,
+        141.82552341536748
+      ]
+    },
+    {
+      "sid": 79,
+      "arrival": 376.3200106152755,
+      "kind": "tool",
+      "task": "Which tool finds the places of the map that match a description? Give an example call.",
+      "tools": [
+        50.93020303152054,
+        76.92180786116516
+      ],
+      "child_tools": [
+        35.25671951848105,
+        25.412085085049306,
+        77.57581277852127
+      ]
+    },
+    {
+      "sid": 80,
+      "arrival": 377.33598459864044,
+      "kind": "tool",
+      "task": "State the largest grip force that the briefing allows and the tool that it applies to.",
+      "tools": [
+        44.43404895445112,
+        22.42098619587478
+      ],
+      "child_tools": [
+        111.48662122684593,
+        236.08604907992517,
+        30.16232954378092
+      ]
+    },
+    {
+      "sid": 82,
+      "arrival": 381.95031036597805,
+      "kind": "fork",
+      "task": "Write a log entry of level warning that reports a blocked corridor.",
+      "tools": [
+        45.06501466075462,
+        46.091886610289016
+      ],
+      "child_tools": [
+        35.469744996642554,
+        154.5448766707408,
+        50.37928067353421
+      ]
+    },
+    {
+      "sid": 84,
+      "arrival": 386.9596596538415,
+      "kind": "single",
+      "task": "Which tools involve a camera? List them with their required arguments.",
+      "tools": [
+        294.9272208288598,
+        124.31310708900621
+      ],
+      "child_tools": [
+        82.10901676156939,
+        193.60584721039945,
+        297.0584365820807
+      ]
+    },
+    {
+      "sid": 86,
+      "arrival": 393.509372279102,
+      "kind": "tool",
+      "task": "Give the tool call that adds a task of priority 2 that is due tomorrow at noon.",
+      "tools": [
+        28.75220457666597,
+        10
+      ],
+      "child_tools": [
+        131.4652790357385,
+        17.869588006158832,
+        116.56932294896329
+      ]
+    },
+    {
+      "sid": 88,
+      "arrival": 399.49463198879903,
+      "kind": "fork",
+      "task": "Which tool sends text to another agent, and what are its arguments?",
+      "tools": [
+        349.456275744618,
+        134.69500633671584
+      ],
+      "child_tools": [
+        10,
+        147.3324962058081,
+        61.60496207649006
+      ]
+    },
+    {
+      "sid": 89,
+      "arrival": 402.9372389267669,
+      "kind": "single",
+      "task": "Summarize the options that select how many layers run on the GPU.",
+      "tools": [
+        88.05764133032427,
+        183.04126470532137
+      ],
+      "child_tools": [
+        104.35216839896104,
+        146.4212541627123,
+        159.15355479980278
+      ]
+    },
+    {
+      "sid": 90,
+      "arrival": 404.1273330074875,
+      "kind": "single",
+      "task": "State the three kinds of material that this briefing contains.",
+      "tools": [
+        16.61861585879434,
+        18.347541613913794
+      ],
+      "child_tools": [
+        46.57622242151328,
+        92.58343103520728,
+        114.77392711623693
+      ]
+    },
+    {
+      "sid": 91,
+      "arrival": 409.07726172854535,
+      "kind": "fork",
+      "task": "Write the tool call that reads printed text with the front camera.",
+      "tools": [
+        97.96126971664557,
+        10.869902849345525
+      ],
+      "child_tools": [
+        133.04696406484467,
+        69.02023723888118,
+        18.121644531934106
+      ]
+    },
+    {
+      "sid": 92,
+      "arrival": 410.8479121694975,
+      "kind": "tool",
+      "task": "What does the documentation say about the timeout of a request?",
+      "tools": [
+        346.7572724740758,
+        52.65357151329153
+      ],
+      "child_tools": [
+        49.87413268578987,
+        307.0226318797096,
+        111.76046482512858
+      ]
+    },
+    {
+      "sid": 93,
+      "arrival": 411.3870429484448,
+      "kind": "tool",
+      "task": "Which tool stops all motion, and when do the rules require it?",
+      "tools": [
+        353.5940722392637,
+        121.22922551579612
+      ],
+      "child_tools": [
+        196.11066783881378,
+        271.54754984876035,
+        85.43894846688337
+      ]
+    },
+    {
+      "sid": 94,
+      "arrival": 427.6679331694998,
+      "kind": "single",
+      "task": "List the options of the server that concern the batch size.",
+      "tools": [
+        218.25899572621137,
+        10
+      ],
+      "child_tools": [
+        133.93856211250494,
+        600,
+        150.77343677196976
+      ]
+    },
+    {
+      "sid": 95,
+      "arrival": 437.1042967513039,
+      "kind": "single",
+      "task": "Give a one-sentence description of each of the first five tools.",
+      "tools": [
+        112.8755618539483,
+        68.62699756487679
+      ],
+      "child_tools": [
+        65.24547424948825,
+        187.61089674051846,
+        21.293777962700368
+      ]
+    },
+    {
+      "sid": 98,
+      "arrival": 439.93743309484086,
+      "kind": "single",
+      "task": "Explain in two sentences how the server reuses a prompt that it has seen before.",
+      "tools": [
+        62.365410840099045,
+        83.22564319776924
+      ],
+      "child_tools": [
+        39.59038430936227,
+        126.54358889710865,
+        10
+      ]
+    },
+    {
+      "sid": 99,
+      "arrival": 443.40718262587643,
+      "kind": "tool",
+      "task": "A user asks the robot to drive at 2 m/s. State what the rules require and which tool call is allowed.",
+      "tools": [
+        295.54949032829455,
+        16.247615961131576
+      ],
+      "child_tools": [
+        66.80140854473076,
+        73.89923020805506,
+        55.97948004152466
+      ]
+    },
+    {
+      "sid": 100,
+      "arrival": 460.7305012695426,
+      "kind": "tool",
+      "task": "Name the endpoints of the server that save and restore the state of a slot.",
+      "tools": [
+        69.57488687347116,
+        69.03685751207313
+      ],
+      "child_tools": [
+        361.90596662636585,
+        192.62903673050252,
+        125.14636230544914
+      ]
+    },
+    {
+      "sid": 101,
+      "arrival": 461.5743390884002,
+      "kind": "tool",
+      "task": "Write the tool call that plans a route from the dock to the kitchen while avoiding the stairs.",
+      "tools": [
+        51.87032998531029,
+        10
+      ],
+      "child_tools": [
+        146.56573486960454,
+        455.0781904028965,
+        121.879559958855
+      ]
+    },
+    {
+      "sid": 102,
+      "arrival": 465.590751464917,
+      "kind": "tool",
+      "task": "Summarize the build instructions for a CUDA build in three steps.",
+      "tools": [
+        74.93005979602805,
+        65.98727519714078
+      ],
+      "child_tools": [
+        37.66919114801058,
+        29.717783222893047,
+        166.67908258115332
+      ]
+    }
+  ]
+}

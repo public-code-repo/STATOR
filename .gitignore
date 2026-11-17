@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.gguf
+*.safetensors
+*.bin
+*.so
+build/
+bin/
+engines/
+models/
+workloads/
+results/
+mounts*/
+mech_work/
+vllm_share_mount/
+vllm_byte_mount/
+ext/

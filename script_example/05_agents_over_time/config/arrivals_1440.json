@@ -1,0 +1,51 @@
+{
+  "rate": 0.14,
+  "window_s": 1440,
+  "budget_gib": 96,
+  "reserve_gib": 16,
+  "floor_gib": 12,
+  "jobs": [
+    {
+      "trace": "traces/tool_wait-longA-rate0.14-mean960-window1440.json",
+      "sha256": "5d34ad3f56c26f3fdbf7c45c39bd0d6201726d2492c9e7461777006249d1ea69",
+      "system": "both",
+      "tag": "trace-longA-mean960-w1440-both-memfs",
+      "limit_s": 7229
+    },
+    {
+      "trace": "traces/tool_wait-longA-rate0.14-mean960-window1440.json",
+      "sha256": "5d34ad3f56c26f3fdbf7c45c39bd0d6201726d2492c9e7461777006249d1ea69",
+      "system": "weights",
+      "tag": "trace-longA-mean960-w1440-weights-memfs",
+      "limit_s": 7229
+    },
+    {
+      "trace": "traces/tool_wait-longB-rate0.14-mean960-window1440.json",
+      "sha256": "3935301f5a05a9128b4a9e4d3688ad7d722405009c9f9abefd79b9f0edf271ab",
+      "system": "weights",
+      "tag": "trace-longB-mean960-w1440-weights-memfs",
+      "limit_s": 7714
+    },
+    {
+      "trace": "traces/tool_wait-longB-rate0.14-mean960-window1440.json",
+      "sha256": "3935301f5a05a9128b4a9e4d3688ad7d722405009c9f9abefd79b9f0edf271ab",
+      "system": "both",
+      "tag": "trace-longB-mean960-w1440-both-memfs",
+      "limit_s": 7714
+    },
+    {
+      "trace": "traces/tool_wait-longC-rate0.14-mean960-window1440.json",
+      "sha256": "cd379810d7bf3ba02c7933cc3852ac98b2d8e9927ebf7d4bbc41e72c17e666e9",
+      "system": "both",
+      "tag": "trace-longC-mean960-w1440-both-memfs",
+      "limit_s": 7709
+    },
+    {
+      "trace": "traces/tool_wait-longC-rate0.14-mean960-window1440.json",
+      "sha256": "cd379810d7bf3ba02c7933cc3852ac98b2d8e9927ebf7d4bbc41e72c17e666e9",
+      "system": "weights",
+      "tag": "trace-longC-mean960-w1440-weights-memfs",
+      "limit_s": 7709
+    }
+  ]
+}
